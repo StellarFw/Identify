@@ -1,0 +1,9 @@
+{
+  "id": "authentication",
+  "name": "Authentication",
+  "version": "1.0.0",
+  "description": "Adds authentication mechanisms to protect your API",
+  "npmDependencies": {
+    "jsonwebtoken": "^7.1.6"
+  }
+}
