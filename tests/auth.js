@@ -17,6 +17,13 @@ const disabledUser = {
   active: false
 }
 
+let activeUserId = ''
+const activeUser = {
+  email: 'active@example.com',
+  password: 'valid_password',
+  active: false
+}
+
 describe('Authentication', () => {
 
   before(done => {
@@ -35,12 +42,18 @@ describe('Authentication', () => {
   beforeEach(done => {
     // create a new user model instance
     let newModel = new(api.models.get('user'))(disabledUser)
+    let newModel2 = new(api.models.get('user'))(activeUser)
 
     // save the new model and return the promise
     newModel.save()
       .then(user => {
         // save the user id
         disabledUserId = user._id
+      })
+      .then(_ => newModel2.save())
+      .catch(e => { console.log('>>', e) })
+      .then(user => {
+        activeUserId = user._id
 
         done()
       })
@@ -48,7 +61,9 @@ describe('Authentication', () => {
 
   afterEach(done => {
     // remove the disabled user
-    api.models.get('user').findByIdAndRemove(disabledUserId).then(_ => done())
+    api.models.get('user').findByIdAndRemove(disabledUserId)
+      .then(_ => api.models.get('user').findByIdAndRemove(activeUserId))
+      .then(_ => done())
   })
 
   describe('auth.register', () => {
@@ -168,6 +183,32 @@ describe('Authentication', () => {
         error.message.should.be.equal('The user are disable')
         done()
       })
+    })
+  })
+
+  it('can disable an user account', done => {
+    api.actions.call('auth.disableUser', { id: activeUserId }, (error, response) => {
+      Should.not.exist(error)
+
+      api.models.get('user').findById(activeUserId)
+        .then(user => {
+          user.active.should.be.equal(false)
+          done()
+        })
+        .catch(done)
+    })
+  })
+
+  it('can enable a disabled user account ', done => {
+    api.actions.call('auth.activateUser', { id: disabledUserId }, (error, response) => {
+      Should.not.exist(error)
+
+      api.models.get('user').findById(disabledUserId)
+        .then(user => {
+          user.active.should.be.equal(true)
+          done()
+        })
+        .catch(done)
     })
   })
 })

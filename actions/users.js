@@ -44,4 +44,32 @@ module.exports = [{
           next()
         })
     }
+}, {
+  name: 'auth.activateUser',
+  description: `This activate a disabled user account.`,
+
+  inputs: {
+    id: {
+      required: true,
+      description: 'user identifier.'
+    }
+  },
+
+  run (api, action, next) {
+    // try find the user and activate his account
+    api.models.get('user').findById(action.params.id)
+      .then(user => {
+        // check if the user exists
+        if (!user) { return next(new Error(`The user not exists!`)) }
+
+        // activate the user
+        user.active = true
+
+        // save the model and return a success message
+        user.save()
+        action.response.success = 'The user was now active!'
+
+        next()
+      })
+  }
 }]
