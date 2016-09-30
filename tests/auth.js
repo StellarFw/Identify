@@ -10,6 +10,13 @@ const validUser = {
   password_confirmation: 'valid_password'
 }
 
+let disabledUserId = ''
+const disabledUser = {
+  email: 'disabled@example.com',
+  password: 'valid_password',
+  active: false
+}
+
 describe('Authentication', () => {
 
   before(done => {
@@ -23,6 +30,25 @@ describe('Authentication', () => {
   after(done => {
     // finish the Stellar instance execution
     engine.stop(() => { done() })
+  })
+
+  beforeEach(done => {
+    // create a new user model instance
+    let newModel = new(api.models.get('user'))(disabledUser)
+
+    // save the new model and return the promise
+    newModel.save()
+      .then(user => {
+        // save the user id
+        disabledUserId = user._id
+
+        done()
+      })
+  })
+
+  afterEach(done => {
+    // remove the disabled user
+    api.models.get('user').findByIdAndRemove(disabledUserId).then(_ => done())
   })
 
   describe('auth.register', () => {
@@ -132,6 +158,14 @@ describe('Authentication', () => {
       api.actions.call('auth.login', validUser, (error, response) => {
         Should.exist(response.custom)
         response.custom.should.be.equal('param')
+        done()
+      })
+    })
+
+    it('disable user can not make login', done => {
+      api.actions.call('auth.login', disabledUser, (error, response) => {
+        Should.exist(error)
+        error.message.should.be.equal('The user are disable')
         done()
       })
     })

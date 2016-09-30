@@ -39,7 +39,12 @@ exports.default = {
         // ---------------------------------------------------------------------
         // Wrong username or password
         // ---------------------------------------------------------------------
-        invalidCredentials: () => 'Invalid credentials'
+        invalidCredentials: () => 'Invalid credentials',
+
+        // ---------------------------------------------------------------------
+        // User are disable
+        // ---------------------------------------------------------------------
+        userIsDisabled: () => 'The user are disable'
       }
     }
   }

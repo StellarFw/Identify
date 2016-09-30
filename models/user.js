@@ -9,7 +9,8 @@ exports.default = (api, mongoose) => {
     email: { type : String , unique : true, required : true },
     password: { type: String, required: true},
     resetToken: String,
-    resetTokenExpire: Date
+    resetTokenExpire: Date,
+    active: Boolean
   })
 
   // define a custom `toJSON` method to remove the password from the output

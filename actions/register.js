@@ -24,7 +24,9 @@ module.exports = [{
     let hash = api.hash.hashSync(action.params.password)
 
     // user data
-    let userData = { email: action.params.email, password: hash }
+    // todo: for now all users are active by default, but we need implement a
+    // way to validate the register before activate the user account
+    let userData = { email: action.params.email, password: hash, active: true }
 
     // event: before creation
     api.events.fire('auth.beforeCreation', userData)

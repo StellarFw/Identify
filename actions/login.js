@@ -26,6 +26,9 @@ module.exports = [{
         // check if the user was found
         if (!user) { return next(api.config.auth.errors.invalidCredentials()) }
 
+        // the user must be active
+        if (!user.active) { return next(api.config.auth.errors.userIsDisabled()) }
+
         // check if password matches
         if (!api.hash.compareSync(action.params.password, user.password)) {
           return next(api.config.auth.errors.invalidCredentials())
