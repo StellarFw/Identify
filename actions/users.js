@@ -72,4 +72,49 @@ module.exports = [{
         next()
       })
   }
+}, {
+  name: 'auth.updateUser',
+  description: `This updates the user information`,
+
+  inputs: {
+    user: {
+      required: true,
+      description: `User information`
+    }
+  },
+
+  run (api, action, next) {
+    // get the user model
+    const UserModel = api.models.get('user')
+
+    // get user params
+    let userParams = action.params.user
+
+    // get the user to be edited
+    // TODO: improve the follow code, some operations can be optimized and more
+    // automatic
+    UserModel.findById(userParams._id)
+      .catch(error => { next(error) })
+      .then(user => {
+        // if the user not exists throw an error
+        if (!user) { return next(new Error(`The user not exists!`)) }
+
+        // if there is an password on the action input params that password must
+        // be hashed before the save
+        if (userParams.password && userParams.password !== user.password) {
+            // TODO: this must be placed on the model and we need to check if
+            // the confirmation field exists
+            userParams.password = api.hash.hashSync(action.params.password)
+        }
+
+        // update the user information
+        UserModel.findOneAndUpdate({ _id: userParams._id }, userParams, (error, model) => {
+          // pass the updated user model to the action response
+          action.response.user = model
+
+          // finish the action execution
+          next()
+        })
+      })
+  }
 }]

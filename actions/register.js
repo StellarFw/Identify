@@ -7,6 +7,10 @@ module.exports = [{
   protected: true,
 
   inputs: {
+    name: {
+      validator: 'alpha_space',
+      description: `User's real time`
+    },
     email: {
       required: true,
       validator: 'email',

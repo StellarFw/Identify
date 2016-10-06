@@ -6,11 +6,29 @@ exports.default = (api, mongoose) => {
 
   // create a new schema
   const userSchema = new Schema({
+    name: { type: String, default: '' },
     email: { type : String , unique : true, required : true },
     password: { type: String, required: true},
     resetToken: String,
     resetTokenExpire: Date,
     active: Boolean
+  }, {
+    toObject: {
+      virtuals: true
+    }
+  })
+
+  /**
+   * Build the user's short name.
+   *
+   * If the name fields only contains one word return them, otherwise return the
+   * first and the last work.
+   */
+  userSchema.virtual('shortName').get(function () {
+    let parts = this.name.split(' ')
+    if (parts.length < 2) { return parts.shift() }
+
+    return `${parts.shift()} ${parts.pop()}`
   })
 
   // define a custom `toJSON` method to remove the password from the output
