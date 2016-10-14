@@ -1,4 +1,4 @@
-let jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 module.exports = [{
   name: 'auth.login',
@@ -19,7 +19,7 @@ module.exports = [{
     }
   },
 
-  run: (api, action, next) => {
+  run (api, action, next) {
     // check if the user exists
     api.models.get('user').findOne({ email: action.params.email })
       .then(user => {

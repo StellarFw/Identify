@@ -8,8 +8,11 @@ Identify is an authentication solution for Stellar made to cur repetitive work i
  - **`auth.register`** - create a new user account;
  - **`auth.login`** - login with an existent user account;
  - **`auth.disableUser`** - disable the user account. Disabled users can not make login;
+ - **`auth.checkSession`** - check the state of a token and if it's valid return the expire time (`expireAt`) and the user info (`user`);
 - models:
  - **`user`** - model to represent a user on the database;
+- events:
+ - **`auth.checkSessionResponse`** - this event allows edit the response for the `auth.checkSession` action.
 - middleware:
  - **`auth.needAuth`** - only authenticated users can access the protected action.
 
@@ -70,4 +73,3 @@ exports.example = {
 - Add a mechanism to reset the user password
 - Add a way to validate users at account creation
 - Add a way to invalidate tokens
-- Add an action to check the session status (the token may be expired)

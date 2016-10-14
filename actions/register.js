@@ -23,7 +23,7 @@ module.exports = [{
     }
   },
 
-  run: (api, action, next) => {
+  run (api, action, next) {
     // generate the password hash
     let hash = api.hash.hashSync(action.params.password)
 

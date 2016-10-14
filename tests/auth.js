@@ -1,4 +1,4 @@
-'use strict'
+const jwt = require('jsonwebtoken')
 
 // will contain the Stellar API object
 let api = null
@@ -182,6 +182,44 @@ describe('Authentication', () => {
         Should.exist(error)
         error.message.should.be.equal('The user are disable')
         done()
+      })
+    })
+  })
+
+  describe('auth.checkSession', () => {
+    it ('returns an error when the token is not present', done => {
+      api.actions.call('auth.checkSession', (error, response) => {
+        Should.exist(error)
+        done()
+      })
+    })
+
+    it ('returns an error when the token is invalid', done => {
+      api.actions.call('auth.checkSession', { token: 'invalid_token' }, (error, response) => {
+        Should.exist(error)
+        error.message.should.be.equal('The token is invalid')
+        done()
+      })
+    })
+
+    it ('do not return an error when the token is valid', done => {
+      let token = null
+
+      // get a valid token
+      api.actions.call('auth.login', validUser, (error, response) => {
+        token = response.token
+
+        api.actions.call('auth.checkSession', { token }, (error, response) => {
+          Should.not.exist(error)
+
+          Should.exist(response.expiresAt)
+          response.expiresAt.should.be.a.Number
+
+          Should.exist(response.user)
+          response.expiresAt.should.be.an.Object
+
+          done()
+        })
       })
     })
   })
