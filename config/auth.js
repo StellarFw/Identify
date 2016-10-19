@@ -22,27 +22,52 @@ exports.default = {
         // ---------------------------------------------------------------------
         // Token not provided
         // ---------------------------------------------------------------------
-        tokenNotProvided: () => 'Token not provided',
+        tokenNotProvided: () => {
+          return {
+            code: 'token_not_provided',
+            message: 'Token not provided'
+          }
+        },
 
         // ---------------------------------------------------------------------
         // Malformed token
         // ---------------------------------------------------------------------
-        malformedToken: () => 'The token is invalid',
+        malformedToken: () => {
+          return {
+            code: 'malformed_token',
+            message: 'The token is invalid'
+          }
+        },
 
         // ---------------------------------------------------------------------
         // Expired token
         // ---------------------------------------------------------------------
-        expiredToken: () => 'The token was expired',
+        expiredToken: () => {
+          return {
+            code: 'expired_token',
+            message: 'The token was expired'
+          }
+        },
 
         // ---------------------------------------------------------------------
         // Wrong username or password
         // ---------------------------------------------------------------------
-        invalidCredentials: () => 'Invalid credentials',
+        invalidCredentials: () => {
+          return {
+            code: 'invalid_credentials',
+            message: 'Invalid credentials'
+          }
+        },
 
         // ---------------------------------------------------------------------
         // User are disable
         // ---------------------------------------------------------------------
-        userIsDisabled: () => 'The user are disable'
+        userIsDisabled: () => {
+          return {
+            code: 'user_id_disabled',
+            message: 'The user are disable'
+          }
+        }
       }
     }
   }

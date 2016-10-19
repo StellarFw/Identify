@@ -44,7 +44,7 @@ module.exports = [{
         // FIXME: improve this
         let userToOutput = user.toJSON()
         delete userToOutput.password
-        action.response.user = JSON.parse(userToOutput)
+        action.response.user = userToOutput
 
         // event: login response
         api.events.fire('auth.loginResponse', action.response)

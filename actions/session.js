@@ -22,11 +22,11 @@ module.exports = [{
     } catch (error) {
       // token was expired
       if (error.name === 'TokenExpiredError') {
-        return next(new Error(api.config.auth.errors.expiredToken()))
+        return next(api.config.auth.errors.expiredToken())
       }
 
       // is an invalid token
-      return next(new Error(api.config.auth.errors.malformedToken()))
+      return next(api.config.auth.errors.malformedToken())
     }
 
     // append the expire timestamp

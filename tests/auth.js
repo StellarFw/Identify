@@ -140,7 +140,7 @@ describe('Authentication', () => {
     it('user needs exists', done => {
       api.actions.call('auth.login', { email: 'some_rand@user.com', password: 'valid_password' }, error => {
         Should.exist(error)
-        error.message.should.be.equal(api.config.auth.errors.invalidCredentials())
+        error.code.should.be.equal('invalid_credentials')
         done()
       })
     })
@@ -148,8 +148,7 @@ describe('Authentication', () => {
     it('password needs match with the user', done => {
       api.actions.call('auth.login', { email: 'user@example.com', password: 'some_password' }, (error, response) => {
         Should.exist(error)
-        error.should.be.an.instanceOf(Error)
-        error.message.should.equal(api.config.auth.errors.invalidCredentials())
+        error.code.should.equal('invalid_credentials')
         done()
       })
     })
@@ -197,7 +196,7 @@ describe('Authentication', () => {
     it ('returns an error when the token is invalid', done => {
       api.actions.call('auth.checkSession', { token: 'invalid_token' }, (error, response) => {
         Should.exist(error)
-        error.message.should.be.equal('The token is invalid')
+        error.code.should.be.equal('malformed_token')
         done()
       })
     })
