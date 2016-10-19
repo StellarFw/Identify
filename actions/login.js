@@ -41,9 +41,10 @@ module.exports = [{
         action.response.token = token
 
         // return the user data, but first remove the password field
+        // FIXME: improve this
         let userToOutput = user.toJSON()
         delete userToOutput.password
-        action.response.user = userToOutput
+        action.response.user = JSON.parse(userToOutput)
 
         // event: login response
         api.events.fire('auth.loginResponse', action.response)
