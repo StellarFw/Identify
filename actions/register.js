@@ -8,7 +8,6 @@ module.exports = [{
 
   inputs: {
     name: {
-      validator: 'alpha_space',
       description: `User's real time`
     },
     email: {
