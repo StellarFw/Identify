@@ -68,97 +68,78 @@ describe('Authentication', () => {
 
   describe('auth.register', () => {
     it('fail with no arguments', done => {
-      api.actions.call('auth.register', error => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.register').should.be.rejected().then(_ => { done() })
     })
 
     it('fail without email', done => {
-      api.actions.call('auth.register', { password: '123456', password_confirmation: '123456' }, error => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.register', { password: '123456', password_confirmation: '123456' }).should.be.rejected().then(_ => { done() })
     })
 
     it('password needs at least six characters', done => {
-      api.actions.call('auth.register', { email: 'user@email.com', password: 'asd', password_confirmation: 'asd' }, error => {
-        Should.exist(error)
-
-        api.actions.call('auth.register', { email: 'some@email.com', password: '123456', password_confirmation: '123456' }, error => {
-          Should.not.exist(error)
-          done()
-        })
-      })
+      api.actions.call('auth.register', { email: 'user@email.com', password: 'asd', password_confirmation: 'asd' }).should.be
+        .rejected()
+        .then(_ => api.actions.call('auth.register', { email: 'some@email.com', password: '123456', password_confirmation: '123456' }))
+        .should.be.fulfilled()
+        .then(_ => { done() })
     })
 
     it('password needs confirmation', done => {
-      api.actions.call('auth.register', { email: 'user@email.com', password: 'valid_password', }, error => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.register', { email: 'user@email.com', password: 'valid_password', }).should.be
+        .rejected()
+        .then(_ => { done() })
     })
 
     it('create a new user', done => {
-      api.actions.call('auth.register', validUser, (error, response) => {
-        Should.not.exist(error)
-        Should.exist(response)
+      api.actions.call('auth.register', validUser)
+        .then(response => {
+          Should.exist(response.user)
+          Should.exist(response.user.email)
+          response.user.email.should.be.an.String()
+          response.user.password.should.be.an.String()
+          Should.exist(response.user.password)
 
-        Should.exist(response.user)
-        Should.exist(response.user.email)
-        response.user.email.should.be.an.String()
-        response.user.password.should.be.an.String()
-        Should.exist(response.user.password)
-
-        done()
-      })
+          done()
+        })
     })
   })
 
   describe('auth.login', () => {
     it('need arguments', done => {
-      api.actions.call('auth.login', (error, response) => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.login').should.be
+        .rejected()
+        .then(_ => { done() })
     })
 
     it('must require the email parameter', done => {
-      api.actions.call('auth.login', { password: 'something' }, (error, response) => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.login', { password: 'something' }).should.be
+        .rejected()
+        .then(_ => { done() })
     })
 
     it('must require the password parameter', done => {
-      api.actions.call('auth.login', { email: 'someuser' }, (error, response) => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.login', { email: 'someuser' }).should.be
+        .rejected()
+        .then(_ => { done() })
     })
 
     it('user needs exists', done => {
-      api.actions.call('auth.login', { email: 'some_rand@user.com', password: 'valid_password' }, error => {
-        Should.exist(error)
-        error.code.should.be.equal('invalid_credentials')
-        done()
-      })
+      api.actions.call('auth.login', { email: 'some_rand@user.com', password: 'valid_password' }).should.be
+        .rejectedWith({ code: 'invalid_credentials' })
+        .then(_ => { done() })
     })
 
     it('password needs match with the user', done => {
-      api.actions.call('auth.login', { email: 'user@example.com', password: 'some_password' }, (error, response) => {
-        Should.exist(error)
-        error.code.should.equal('invalid_credentials')
-        done()
-      })
+      api.actions.call('auth.login', { email: 'user@example.com', password: 'some_password' }).should.be
+        .rejectedWith({ code: 'invalid_credentials' })
+        .then(_ => { done() })
     })
 
     it('must generate a token', done => {
-      api.actions.call('auth.login', validUser, (error, response) => {
-        Should.not.exist(error)
-        response.token.should.be.an.instanceOf(String)
-        done()
-      })
+      api.actions.call('auth.login', validUser)
+        .then(response => {
+          response.token.should.be.an.instanceOf(String)
+          done()
+        })
     })
 
     it('can modify the response', done => {
@@ -169,48 +150,40 @@ describe('Authentication', () => {
       })
 
       // call the login action
-      api.actions.call('auth.login', validUser, (error, response) => {
-        Should.exist(response.custom)
-        response.custom.should.be.equal('param')
-        done()
-      })
+      api.actions.call('auth.login', validUser)
+        .then(response => {
+          response.custom.should.be.equal('param')
+          done()
+        })
     })
 
     it('disable user can not make login', done => {
-      api.actions.call('auth.login', disabledUser, (error, response) => {
-        Should.exist(error)
-        error.message.should.be.equal('The user are disable')
-        done()
-      })
+      api.actions.call('auth.login', disabledUser).should.be
+        .rejectedWith({ message: 'The user are disable' })
+        .then(_ => { done() })
     })
   })
 
   describe('auth.checkSession', () => {
     it ('returns an error when the token is not present', done => {
-      api.actions.call('auth.checkSession', (error, response) => {
-        Should.exist(error)
-        done()
-      })
+      api.actions.call('auth.checkSession').should.be
+        .rejected()
+        .then(_ => { done() })
     })
 
     it ('returns an error when the token is invalid', done => {
-      api.actions.call('auth.checkSession', { token: 'invalid_token' }, (error, response) => {
-        Should.exist(error)
-        error.code.should.be.equal('malformed_token')
-        done()
-      })
+      api.actions.call('auth.checkSession', { token: 'invalid_token' }).should.be
+        .rejectedWith({ code: 'malformed_token' })
+        .then(_ => { done() })
     })
 
     it ('do not return an error when the token is valid', done => {
       let token = null
 
       // get a valid token
-      api.actions.call('auth.login', validUser, (error, response) => {
-        token = response.token
-
-        api.actions.call('auth.checkSession', { token }, (error, response) => {
-          Should.not.exist(error)
-
+      api.actions.call('auth.login', validUser)
+        .then(response => api.actions.call('auth.checkSession', { token: response.token }))
+        .then(response => {
           Should.exist(response.expiresAt)
           response.expiresAt.should.be.a.Number
 
@@ -219,33 +192,26 @@ describe('Authentication', () => {
 
           done()
         })
-      })
     })
   })
 
   it('can disable an user account', done => {
-    api.actions.call('auth.disableUser', { id: activeUserId }, (error, response) => {
-      Should.not.exist(error)
-
-      api.models.get('user').findById(activeUserId)
-        .then(user => {
-          user.active.should.be.equal(false)
-          done()
-        })
-        .catch(done)
-    })
+    api.actions.call('auth.disableUser', { id: activeUserId })
+      .then(response => api.models.get('user').findById(activeUserId) )
+      .then(user => {
+        user.active.should.be.equal(false)
+        done()
+      })
+      .catch(done)
   })
 
   it('can enable a disabled user account ', done => {
-    api.actions.call('auth.activateUser', { id: disabledUserId }, (error, response) => {
-      Should.not.exist(error)
-
-      api.models.get('user').findById(disabledUserId)
-        .then(user => {
-          user.active.should.be.equal(true)
-          done()
-        })
-        .catch(done)
-    })
+    api.actions.call('auth.activateUser', { id: disabledUserId })
+      .then(response => api.models.get('user').findById(disabledUserId))
+      .then(user => {
+        user.active.should.be.equal(true)
+        done()
+      })
+      .catch(done)
   })
 })
