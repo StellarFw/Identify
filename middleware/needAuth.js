@@ -33,6 +33,6 @@ exports.needAuth = {
       return
     }
 
-    return next(new Error(api.config.auth.errors.tokenNotProvided()))
+    return next(api.config.auth.errors.tokenNotProvided())
   }
 }
