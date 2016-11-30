@@ -1,6 +1,6 @@
 {
-  "id": "authentication",
-  "name": "Authentication",
+  "id": "identify",
+  "name": "Identify",
   "version": "1.0.0",
   "description": "Adds authentication mechanisms to protect your API",
   "npmDependencies": {
