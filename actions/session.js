@@ -39,7 +39,7 @@ module.exports = [{
         // TODO: validate if the user is active
 
         // append the user object to the response
-        action.response.user = user
+        action.response.user = user.toJSON()
 
         // fire an event to allow other modules append new information to the
         // response
