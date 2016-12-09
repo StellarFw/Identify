@@ -33,7 +33,8 @@ module.exports = [{
     action.response.expiresAt = decoded.exp
 
     // append the user info
-    api.models.get('user').findById(decoded._doc._id)
+    api.models.get('user')
+      .findOne(decoded.id)
       .catch(error => { next(error) })
       .then(user => {
         // TODO: validate if the user is active

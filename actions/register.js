@@ -33,13 +33,7 @@ module.exports = [{
 
     // event: before creation
     api.events.fire('auth.beforeCreation', userData)
-      .then(userData => {
-        // create a new user model instance
-        let newModel = new(api.models.get('user'))(userData)
-
-        // save the new model and return the promise
-        return newModel.save()
-      })
+      .then(userData => api.models.get('user').create(userData))
       .then(model => {
         // event: after creation
         api.events.fire('auth.afterCreation', model)

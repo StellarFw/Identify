@@ -40,20 +40,17 @@ describe('Authentication', () => {
   })
 
   beforeEach(done => {
-    // create a new user model instance
-    let newModel = new(api.models.get('user'))(disabledUser)
-    let newModel2 = new(api.models.get('user'))(activeUser)
+    // get user model
+    const User = api.models.get('user')
 
-    // save the new model and return the promise
-    newModel.save()
+    User.create(disabledUser)
+      // save the user id
+      .then(user => { disabledUserId = user.id })
+      // create the second user
+      .then(_ => User.create(activeUser))
       .then(user => {
         // save the user id
-        disabledUserId = user._id
-      })
-      .then(_ => newModel2.save())
-      .catch(e => { console.log('>>', e) })
-      .then(user => {
-        activeUserId = user._id
+        activeUserId = user.id
 
         done()
       })
@@ -61,8 +58,8 @@ describe('Authentication', () => {
 
   afterEach(done => {
     // remove the disabled user
-    api.models.get('user').findByIdAndRemove(disabledUserId)
-      .then(_ => api.models.get('user').findByIdAndRemove(activeUserId))
+    api.models.get('user').destroy({ id: disabledUserId })
+      .then(_ => api.models.get('user').destroy({ id: activeUserId }))
       .then(_ => done())
   })
 
@@ -197,7 +194,7 @@ describe('Authentication', () => {
 
   it('can disable an user account', done => {
     api.actions.call('auth.disableUser', { id: activeUserId })
-      .then(response => api.models.get('user').findById(activeUserId) )
+      .then(response => api.models.get('user').findOne(activeUserId) )
       .then(user => {
         user.active.should.be.equal(false)
         done()
@@ -207,7 +204,7 @@ describe('Authentication', () => {
 
   it('can enable a disabled user account ', done => {
     api.actions.call('auth.activateUser', { id: disabledUserId })
-      .then(response => api.models.get('user').findById(disabledUserId))
+      .then(response => api.models.get('user').findOne(disabledUserId))
       .then(user => {
         user.active.should.be.equal(true)
         done()

@@ -29,7 +29,8 @@ module.exports = [{
 
     run (api, action, next) {
       // try find the user and disable his account
-      api.models.get('user').findById(action.params.id)
+      api.models.get('user')
+        .findOne(action.params.id)
         .then(user => {
           // check if the user exists
           if (!user) { return next(new Error(`The user not exists!`)) }
@@ -37,10 +38,11 @@ module.exports = [{
           // disable the user
           user.active = false
 
-          // save the model and return a success message
-          user.save()
+          // update the user
+          return api.actions.call('auth.updateUser', { user })
+        })
+        .then(_ => {
           action.response.success = 'The user was been disabled!'
-
           next()
         })
     }
@@ -57,7 +59,8 @@ module.exports = [{
 
   run (api, action, next) {
     // try find the user and activate his account
-    api.models.get('user').findById(action.params.id)
+    api.models.get('user')
+      .findOne(action.params.id)
       .then(user => {
         // check if the user exists
         if (!user) { return next(new Error(`The user not exists!`)) }
@@ -65,10 +68,11 @@ module.exports = [{
         // activate the user
         user.active = true
 
-        // save the model and return a success message
-        user.save()
+        // update the user
+        return api.actions.call('auth.updateUser', { user })
+      })
+      .then(_ => {
         action.response.success = 'The user was now active!'
-
         next()
       })
   }
@@ -93,7 +97,7 @@ module.exports = [{
     // get the user to be edited
     // TODO: improve the follow code, some operations can be optimized and more
     // automatic
-    UserModel.findById(userParams._id)
+    UserModel.findOne(userParams.id)
       .catch(error => { next(error) })
       .then(user => {
         // if the user not exists throw an error
@@ -108,7 +112,7 @@ module.exports = [{
         }
 
         // update the user information
-        UserModel.findOneAndUpdate({ _id: userParams._id }, userParams, (error, model) => {
+        UserModel.update({ id: userParams.id }, userParams, (error, model) => {
           // pass the updated user model to the action response
           action.response.user = model
 

@@ -21,7 +21,8 @@ module.exports = [{
 
   run (api, action, next) {
     // check if the user exists
-    api.models.get('user').findOne({ email: action.params.email })
+    api.models.get('user')
+      .findOne({ email: action.params.email })
       .then(user => {
         // check if the user was found
         if (!user) { return next(api.config.auth.errors.invalidCredentials()) }

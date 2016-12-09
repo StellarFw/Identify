@@ -1,43 +1,40 @@
 'use strict'
 
-exports.default = (api, mongoose) => {
-  // get Schema type
-  const Schema = mongoose.Schema
+exports.default = api => {
+  // create a model for the user
+  const userSchema = {
+    attributes: {
+      name: { type: 'string', default: '' },
+      email: { type : 'string' , unique : true, required : true },
+      password: { type: 'string', required: true},
+      resetToken: 'string',
+      resetTokenExpire: 'datetime',
+      active: 'boolean',
 
-  // create a new schema
-  const userSchema = new Schema({
-    name: { type: String, default: '' },
-    email: { type : String , unique : true, required : true },
-    password: { type: String, required: true},
-    resetToken: String,
-    resetTokenExpire: Date,
-    active: Boolean
-  }, {
-    toObject: {
-      virtuals: true
+      /**
+       * Build the user's short name.
+       *
+       * If the name fields only contains one word return them, otherwise return the
+       * first and the last work.
+       */
+      shortName () {
+        let parts = this.name.split(' ')
+        if (parts.length < 2) { return parts.shift() }
+
+        return `${parts.shift()} ${parts.pop()}`
+      },
+
+      /**
+       * Define a custom `toJSON` method to remove the password from the output
+       */
+      toJSON () {
+        const user = this.toObject();
+        delete user.password
+        return user
+      }
     }
-  })
+  }
 
-  /**
-   * Build the user's short name.
-   *
-   * If the name fields only contains one word return them, otherwise return the
-   * first and the last work.
-   */
-  userSchema.virtual('shortName').get(function () {
-    let parts = this.name.split(' ')
-    if (parts.length < 2) { return parts.shift() }
-
-    return `${parts.shift()} ${parts.pop()}`
-  })
-
-  // define a custom `toJSON` method to remove the password from the output
-  userSchema.method('toJSON', function () {
-    const user = this.toObject()
-    delete user.password
-    return user
-  })
-
-  // return the new schema
+  // return the model
   return userSchema
 }
