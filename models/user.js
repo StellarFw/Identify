@@ -28,8 +28,14 @@ exports.default = api => {
        * Define a custom `toJSON` method to remove the password from the output
        */
       toJSON () {
-        const user = this.toObject();
+        const user = this.toObject()
+
+        // remove the password field
         delete user.password
+
+        // append the shortName
+        user.shortName = this.shortName()
+
         return user
       }
     }
