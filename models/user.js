@@ -5,8 +5,8 @@ exports.default = api => {
   const userSchema = {
     attributes: {
       name: { type: 'string', default: '' },
-      email: { type : 'string' , unique : true, required : true },
-      password: { type: 'string', required: true},
+      email: { type : 'string' , unique : true, defaultsTo : true },
+      password: { type: 'string', defaultsTo: true},
       resetToken: 'string',
       resetTokenExpire: 'datetime',
       active: 'boolean',

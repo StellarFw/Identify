@@ -26,10 +26,14 @@ module.exports = [{
     // generate the password hash
     let hash = api.hash.hashSync(action.params.password)
 
+    // clone the action params
+    const userData = JSON.parse(JSON.stringify(action.params))
+
     // user data
     // todo: for now all users are active by default, but we need implement a
     // way to validate the register before activate the user account
-    let userData = { email: action.params.email, password: hash, active: true }
+    userData.password = hash
+    userData.active = true
 
     // event: before creation
     api.events.fire('auth.beforeCreation', userData)
