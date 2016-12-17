@@ -49,6 +49,6 @@ module.exports = [{
         // finish the action execution
         next()
       })
-      .catch(error => next(new Error('We can create that resource!')))
+      .catch(error => next(error))
   }
 }]

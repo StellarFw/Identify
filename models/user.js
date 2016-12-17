@@ -4,7 +4,7 @@ exports.default = api => {
   // create a model for the user
   const userSchema = {
     attributes: {
-      name: { type: 'string', default: '' },
+      name: { type: 'string', defaultsTo: '' },
       email: { type : 'string' , unique : true, defaultsTo : true },
       password: { type: 'string', defaultsTo: true},
       resetToken: 'string',
