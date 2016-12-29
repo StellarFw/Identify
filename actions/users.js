@@ -98,10 +98,9 @@ module.exports = [{
     // TODO: improve the follow code, some operations can be optimized and more
     // automatic
     UserModel.findOne(userParams.id)
-      .catch(error => { next(error) })
       .then(user => {
         // if the user not exists throw an error
-        if (!user) { return next(new Error(`The user not exists!`)) }
+        if (!user) { throw new Error(`The user not exists!`) }
 
         // if there is an password on the action input params that password must
         // be hashed before the save
@@ -112,13 +111,15 @@ module.exports = [{
         }
 
         // update the user information
-        UserModel.update({ id: userParams.id }, userParams, (error, model) => {
-          // pass the updated user model to the action response
-          action.response.user = model
-
-          // finish the action execution
-          next()
-        })
+        return UserModel.update({ id: userParams.id }, userParams)
       })
+      .then(model => {
+        // pass the updated user model to the action response
+        action.response.user = model
+
+        // finish the action execution
+        next()
+      })
+      .catch(error => { next(error) })
   }
 }]
