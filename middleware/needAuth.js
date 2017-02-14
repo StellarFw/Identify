@@ -5,6 +5,9 @@ exports.needAuth = {
   description: 'The user needs authentication to access the action',
 
   preProcessor: (action, next) => {
+    // ignore when the call is made internally
+    if (action.connection.type === 'internal') { return next() }
+
     // get the API reference
     let api = action.api
 
