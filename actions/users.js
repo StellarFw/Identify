@@ -92,7 +92,7 @@ module.exports = [{
     }
   },
 
-  run (api, action, next) {
+  run (api, action) {
     // get the user model
     const UserModel = api.models.get('user')
 
@@ -102,29 +102,25 @@ module.exports = [{
     // get the user to be edited
     // TODO: improve the follow code, some operations can be optimized and more
     // automatic
-    UserModel.findOne(userParams.id)
-      .then(user => {
-        // if the user not exists throw an error
-        if (!user) { throw new Error(`The user not exists!`) }
+    return UserModel.findOne(userParams.id)
+    .then(user => {
+      // if the user not exists throw an error
+      if (!user) { throw new Error(`The user not exists!`) }
 
-        // if there is an password on the action input params that password must
-        // be hashed before the save
-        if (userParams.password && userParams.password !== user.password) {
-            // TODO: this must be placed on the model and we need to check if
-            // the confirmation field exists
-            userParams.password = api.hash.hashSync(action.params.password)
-        }
+      // if there is an password on the action input params that password must
+      // be hashed before the save
+      if (userParams.password && userParams.password !== user.password) {
+          // TODO: this must be placed on the model and we need to check if
+          // the confirmation field exists
+          userParams.password = api.hash.hashSync(action.params.password)
+      }
 
-        // update the user information
-        return UserModel.update({ id: userParams.id }, userParams)
-      })
-      .then(model => {
-        // pass the updated user model to the action response
-        action.response.user = model
-
-        // finish the action execution
-        next()
-      })
-      .catch(error => { next(error) })
+      // update the user information
+      return UserModel.update(userParams.id, userParams)
+    })
+    .then(([user]) => {
+      // pass the updated user model to the action response
+      action.response.user = user
+    })
   }
 }]
