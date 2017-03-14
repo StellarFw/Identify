@@ -17,7 +17,7 @@ module.exports = [{
     },
     password: {
       required: true,
-      validator: 'confirmed|min:6|max:20',
+      validator: 'min:6|max:20',
       description: 'Password for the new user account'
     }
   },
