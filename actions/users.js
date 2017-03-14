@@ -2,18 +2,23 @@ module.exports = [{
   name: 'auth.getUsers',
   description: 'Get all registered users',
 
-  run (api, action, next) {
+  run (api, action) {
     // get the User model
     const User = api.models.get('user')
 
-    // get all users and return them to the client
-    User.find({})
-      .then(users => {
-        action.response.users = users
+    // build the query to get all registered users
+    const search = User.find({})
 
-        next()
-      })
-      .catch(err => { next(new Error(err)) })
+    // perform a event on the search object in order to allow other modules
+    // extend it
+    return api.events.fire('identify.beforeSearchUsers', { search })
+    .then(({ search }) => search)
+
+    // perform a event after the search
+    .then(users => api.events.fire('identify.afterSearchUsers', { users }))
+
+    // put the users available on the response
+    .then(({ users }) => { action.response.users = users })
   }
 }, {
   name: 'auth.disableUser',
