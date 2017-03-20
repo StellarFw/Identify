@@ -8,16 +8,16 @@ In order to maintain a secure connection between the server and the client, Iden
 
 ### `User`
 
-This model represents a user on the database. This model contains the following fields:
+Represents a user on the database, it contains the following fields:
 
-* **name**: Name of the user (`string`, `default=''`);
-* **email**: User email, this will be used on the login process (`string`, `required`);
-* **password**: Password, this field will be used in the login process (`string`, `required`);
-* **resetToken**: This field is used to store the reset token, this token is used for the user reset their password (`string`, `defaultsTo=null`);
-* **resetTokenExpire**: This field is used to store the expire time of the reset token (`datetime`, `defaultsTo=null`);
-* **active**: This field indicates if the account is active or not (`boolean`, `defaultsTo=false`);
-* **shortName**: This is a automatic field that is generated using the first name and the last name from the `name` field (`string`, `computed`);
-* **metadata**: This field is used to store additional user information, like personal configurations, using a hash (`object`, `defaultsTo={}`).
+* **name**: User name (`string`, `default=''`);
+* **email**: User email, will be used on the login process (`string`, `required`);
+* **password**:User acess password, used in the login process (`string`, `required`);
+* **resetToken**: Used to store the reset token when the user reset her password (`string`, `defaultsTo=null`);
+* **resetTokenExpire**: Used to store the expire time of the reset token (`datetime`, `defaultsTo=null`);
+* **active**: Indicates if the account is active or not (`boolean`, `defaultsTo=false`);
+* **shortName**:Automatic field that is generated using the first name and the last name from the `name` field (`string`, `computed`);
+* **metadata**:Used to store additional user information like personal configurations, using a hash (`object`, `defaultsTo={}`).
 
 The developer can extend the model by using the system events. In this case using the `core.models.add.user`.
 
@@ -25,19 +25,19 @@ The developer can extend the model by using the system events. In this case usin
 
 ### identify.activeByDefault
 
-This configuration allow the developer set what the account state when the user makes signup. By default the value is set to `false`, this means that the account is inactive.
+This configuration allows the developer to set if the user account is active or not by default. By default the value is set to `false`.
 
 ### identify.activationTokenDuration
 
-This configuration contains the duration while the activation token is valid. This parameter accepts values in milliseconds. By default, this configuration parameter is set to `1440000` (1 day).
+This configuration contains how long the token is valid. Accepts values in milliseconds. By default is set to `1440000` (1 day).
 
 ### identify.activationLink
 
-This configuration is mandatory in order to send reset links and activation links to the user email. By default, this is set to `null`.
+This configuration is mandatory in order to send reset and activation links to the user by email. By default, this is set to `null`.
 
 ## Errors
 
-In this section are defined all the error messages used in the module. This messages must be specified using the configuration system, in order to allow the customized by the developer. The only thing that should be constant is the error ID, the ID correspond to the key on the following list.
+In this section are defined all the error messages used in the module. This messages must be specified using the configuration system, in order to allow to be customized by the developer. The only thing that should be constant is the error ID. The ID correspond to the key on the following list.
 
 - `UserAlreadyExistsError`: The user email is already in user.
 - `InvalidCredentialsError`: Invalid credentials.
@@ -54,8 +54,8 @@ This action is responsible to create a new user.
 #### Parameters
 
 - `name (string)`: user real name.
-- `email (string, required)`: this field must contain the email that the user will use to make login.
-- `password (string, required, min:6)`: this must contains a clear text version of the password that the user will use to make login.
+- `email (string, required)`: must contain the user login email.
+- `password (string, required, min:6)`:must contain a clear text version of the user login password.`
 
 #### Process
 
@@ -77,7 +77,7 @@ This action must run these steps:
 
 #### Description
 
-Allow the user to get a valid token that will be used by the user to identify themselves.
+Get's a valid token that will be used by the user to identify themself.
 
 #### Parameters
 
