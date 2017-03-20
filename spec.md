@@ -66,9 +66,9 @@ This action must run these steps:
 3. The event `identify.beforeRegister` is executed and the input parameters is passed as parameter.
 4. The `active` field is set with the `identify.activeByDefault` config.
 5. If the `active` flag is `false`
-  1. Generate an activation token with expire time based on the `identify.activationTokenDuration` config.
-  2. Set the `resetToken` and the `resetTokenExpire` on user data.
-  3. Send an email with the action link to the given `email`. The link must be the URL defined on the `identify.activationLink` with the query strings **token** set with the `activationToken`, and one **step** set with the value `activation`.
+    1. Generate an activation token with expire time based on the `identify.activationTokenDuration` config.
+    2. Set the `resetToken` and the `resetTokenExpire` on user data.
+    3. Send an email with the action link to the given `email`. The link must be the URL defined on the `identify.activationLink` with the query strings **token** set with the `activationToken`, and one **step** set with the value `activation`.
 6. Create the user on the database.
 7. Execute the `identify.afterRegister` and pass the created model as parameter.
 8. Return a success response with a `user` field that contains the created user model.
