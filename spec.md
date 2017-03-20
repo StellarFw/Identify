@@ -17,3 +17,9 @@ This model represents a user on the database. This model contains the following 
 * **`resetTokenExpire`**: This field is used to store the expire time of the reset token (`datetime`, `defaultsTo=null`);
 * **`active`**: This field indicates if the account is active or not (`boolean`, `defaultsTo=false`);
 * **`shortName`**: This is a automatic field that is generated using the first name and the last name from the `name` field (`string`, `computed`);
+
+## Actions
+
+### `identify.register`
+
+This action is responsible to create a new user
