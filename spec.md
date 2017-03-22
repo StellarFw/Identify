@@ -77,7 +77,7 @@ This action must run these steps:
 
 #### Description
 
-Get's a valid token that will be used by the user to identify themself.
+Get's a valid token that will be used by the user to identify themselves.
 
 #### Parameters
 
