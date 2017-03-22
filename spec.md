@@ -42,6 +42,8 @@ In this section are defined all the error messages used in the module. This mess
 - `UserAlreadyExistsError`: The user email is already in user.
 - `InvalidCredentialsError`: Invalid credentials.
 - `InactiveAccountError`: The account is inactive. Please, check your email for the activation link or request a new activation link.
+- `TokenExpiredError`: The token expired.
+- `MalformedTokenError`: The token is invalid, and isn't complaint with the JSON Web Token standard.
 
 ## Actions
 
@@ -111,3 +113,22 @@ This action must run these steps:
 1. If there is no registered user with the given `id`, the `InvalidCredentialsError` must be thrown.
 2. Set the `active` field to `false` and save the change on the database.
 3. Return a success message with the user as a response field.
+
+### `identify.checkSession`
+
+Validate the token and return the user model if this one is valid.
+
+#### Parameters
+
+- `token (required, string)`: token got using the `identify.login` action.
+
+#### Process
+
+This action must run these steps:
+
+1. Decode the given `token`.
+2. If the token has expired throw the `TokenExpiredError`.
+3. If is an invalid token throw the `MalformedTokenError`.
+4. If the user doesn't exists throw the `InvalidCredentialsError`.
+5. Append the expire timestamp on the response message (`expiresAt`).
+6. Fire the `identify.afterCheckSession` event in order to other modules extend the response message. This must contain the response object as parameter.
