@@ -95,3 +95,19 @@ This action must run these steps:
 5. Remove the `password` field from the output data.
 6. Execute the event `identify.afterLogin` with the authenticated user and the created token.
 7. Return a success message with the logged user and the valid token.
+
+### `identify.disableUser`
+
+Disable an user account.
+
+#### Parameters
+
+- `id (required, string)`: user identifier.
+
+#### Process
+
+This action must run these steps:
+
+1. If there is no registered user with the given `id`, the `InvalidCredentialsError` must be thrown.
+2. Set the `active` field to `false` and save the change on the database.
+3. Return a success message with the user as a response field.
