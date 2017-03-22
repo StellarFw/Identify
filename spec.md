@@ -35,6 +35,10 @@ This configuration contains how long the token is valid. Accepts values in milli
 
 This configuration is mandatory in order to send reset and activation links to the user by email. By default, this is set to `null`.
 
+### identify.expiresIn
+
+This configuration allows set the time passed until the token expires. This can be expressed in seconds or a string describing a time span matching the format specified by the node package [ms](https://www.npmjs.com/package/ms).
+
 ## Errors
 
 In this section are defined all the error messages used in the module. This messages must be specified using the configuration system, in order to allow to be customized by the developer. The only thing that should be constant is the error ID. The ID correspond to the key on the following list.
@@ -83,8 +87,8 @@ Get's a valid token that will be used by the user to identify themselves.
 
 #### Parameters
 
-- `email (required)`: user email.
-- `password (required, min:6)`: clear text password for the given email.
+- `email (required, string)`: user email.
+- `password (required, string, min:6)`: clear text password for the given email.
 
 #### Process
 
@@ -94,6 +98,8 @@ This action must run these steps:
 2. If the `active` field is set to `false`, thrown the `InactiveAccountError`.
 3. If the hashed password (input field) doesn't match with the `password` field of the found user, throw the `InvalidCredentialsError`.
 4. Generate a new valid JSON Web Token.
+    1. That expires passed the time set on the `identify.expiresIn` configuration.
+    2. That contains the user model.
 5. Remove the `password` field from the output data.
 6. Execute the event `identify.afterLogin` with the authenticated user and the created token.
 7. Return a success message with the logged user and the valid token.
