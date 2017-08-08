@@ -112,7 +112,7 @@ module.exports = [{
       if (userParams.password && userParams.password !== user.password) {
           // TODO: this must be placed on the model and we need to check if
           // the confirmation field exists
-          userParams.password = api.hash.hashSync(action.params.password)
+          userParams.password = api.hash.hashSync(userParams.password)
       }
 
       // update the user information
