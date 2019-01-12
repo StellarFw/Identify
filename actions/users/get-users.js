@@ -6,7 +6,7 @@ exports.default = {
     active: {
       description: "When set will be used to filter the users by state",
       type: "boolean",
-      format: val => typeof val === "boolean" ? val : null,
+      format: val => typeof val === "boolean" ? val : true,
     }
   },
 
