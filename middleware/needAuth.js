@@ -24,7 +24,9 @@ exports.needAuth = {
     if (token) {
       // verify secret and check exp
       jwt.verify(token, api.config.auth.secret, (error, decoded) => {
-        if (error) { return next(new Error(api.config.auth.errors.malformedToken())) }
+        if (error) {
+          return next(api.config.auth.errors.malformedToken());
+        }
 
         // if everything is good, save was an action property to be used later
         action.authDecodedToken = decoded
