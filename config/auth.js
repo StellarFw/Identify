@@ -15,6 +15,13 @@ exports.default = {
       // ---------------------------------------------------------------------
       expiresIn: '1 day',
 
+      // ---------------------------------------------------------------------
+      // Default account state
+      // ---
+      // Set the default account activation state after user registration
+      // ---------------------------------------------------------------------
+      activeByDefault: true,
+
       errors: {
         // don't expand this
         '_toExpand': false,
