@@ -22,6 +22,13 @@ exports.default = {
       // ---------------------------------------------------------------------
       activeByDefault: true,
 
+      // ---------------------------------------------------------------------
+      // Time until the reset token becomes invalid
+      // ---
+      // Expressed in seconds or a string describing a time span rauchg/ms
+      // ---------------------------------------------------------------------
+      resetTokenValidity: "15 days",
+
       errors: {
         // don't expand this
         _toExpand: false,
