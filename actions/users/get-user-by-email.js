@@ -19,6 +19,6 @@ exports.default = {
       throw api.config.auth.errors.userDoesNotExists;
     }
 
-    response.user = { user: record }
+    response.user = record
   }
 }

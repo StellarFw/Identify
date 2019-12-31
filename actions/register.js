@@ -27,24 +27,22 @@ module.exports = [{
     }
   },
 
-  run (api, action, next) {
-    const userData = JSON.parse(JSON.stringify(action.params))
+  async run (api, action, next) {
+    const User = api.models.get('user');
+
+    let userData = JSON.parse(JSON.stringify(action.params))
     userData.password = api.hash.hashSync(action.params.password)
 
     // event: before creation
-    api.events.fire('auth.beforeCreation', userData)
-      .then(userData => api.models.get('user').create(userData))
-      .then(model => {
-        // event: after creation
-        api.events.fire('auth.afterCreation', model)
+    userData = await api.events.fire('auth.beforeCreation', userData)
 
-        // append the new model on the response object
-        action.response.success = true
-        action.response.user = model
+    const model = await User.create(userData)
 
-        // finish the action execution
-        next()
-      })
-      .catch(error => next(error))
+    // event: after creation
+    api.events.fire('auth.afterCreation', model)
+
+    // append the new model on the response object
+    action.response.success = true
+    action.response.user = model
   }
 }]

@@ -5,6 +5,7 @@
   "description": "Adds authentication mechanisms to protect your API",
   "dependencies": ["postman"],
   "npmDependencies": {
-    "jsonwebtoken": "^7.1.6"
+    "jsonwebtoken": "^7.1.6",
+    "date-fns": "^2.8.1"
   }
 }
