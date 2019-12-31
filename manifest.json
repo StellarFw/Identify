@@ -6,6 +6,7 @@
   "dependencies": ["postman"],
   "npmDependencies": {
     "jsonwebtoken": "^7.1.6",
-    "date-fns": "^2.8.1"
+    "date-fns": "^2.8.1",
+    "ramda": "*"
   }
 }
