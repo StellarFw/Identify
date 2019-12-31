@@ -41,7 +41,7 @@ exports.default = {
         // Activation link that is used on the activation email that is sent to
         // the user when a new account is created.
         // ---------------------------------------------------------------------
-        activationLink: token => `${getBaseUrl(api)}?token=${token}`
+        activationLink: token => `${getBaseUrl(api)}/activation/${token}`
       },
 
       resetToken: {

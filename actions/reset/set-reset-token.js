@@ -3,6 +3,7 @@ const addMinutes = require('date-fns/addMinutes');
 exports.default = {
   name: "identify.setResetToken",
   description: "Set a reset token for the given user",
+  private: true,
 
   inputs: {
     email: {
