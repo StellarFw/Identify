@@ -41,7 +41,7 @@ exports.default = {
         // Activation link that is used on the activation email that is sent to
         // the user when a new account is created.
         // ---------------------------------------------------------------------
-        activationLink: token => `${getBaseUrl(api)}/activation/${token}`
+        activationLink: api => token => `${getBaseUrl(api)}/auth/activation/${token}`
       },
 
       resetToken: {
@@ -78,7 +78,7 @@ exports.default = {
         // This function receives an object with the following props:
         // - activationLink: link with the URL for the activation
         // ---------------------------------------------------------------------
-        activation: opts => `
+        activation: api => opts => `
           <h1>${getEmailTitle(api)}</h1>
           Click on the following link to activate your account <a href="${opts.activationLink}">${opts.activationLink}</a>.
         `,
