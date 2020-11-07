@@ -23,7 +23,7 @@ module.exports = [{
     // check if the user exists
     api.models.get('user')
       .findOne({ email: action.params.email })
-      .then(user => {
+      .then(async (user) => {
         // check if the user was found
         if (!user) { return next(api.config.auth.errors.invalidCredentials()) }
 
@@ -42,9 +42,7 @@ module.exports = [{
         action.response.token = token
 
         // return the user data, but first remove the password field
-        // FIXME: improve this
-        let userToOutput = user.toJSON()
-        delete userToOutput.password
+        const { user: userToOutput } = await api.actions.call('auth.stripUser', { user });
         action.response.user = userToOutput
 
         // event: login response

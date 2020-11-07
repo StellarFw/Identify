@@ -39,8 +39,8 @@ module.exports = [{
       .then(user => {
         // TODO: validate if the user is active
 
-        // append the user object to the response
-        action.response.user = user.toJSON()
+        const { user: userToOutput } = await api.actions.call('auth.stripUser', { user });
+        action.response.user = userToOutput
 
         // fire an event to allow other modules append new information to the
         // response
