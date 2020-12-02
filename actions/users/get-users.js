@@ -1,3 +1,5 @@
+const R = require("ramda");
+
 exports.default = {
   name: 'auth.getUsers',
   description: 'Get all registered users',
@@ -28,7 +30,11 @@ exports.default = {
     search = (await api.events.fire('identify.beforeSearchUsers', { search })).search
 
     let users = await search;
-    
+
+    // remove protected fields
+    const removePassword = R.dissoc("password");
+    users = users.map(user => removePassword(user));
+
     // perform a event after the search
     users = (await api.events.fire('identify.afterSearchUsers', { users })).users
 

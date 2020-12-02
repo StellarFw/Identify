@@ -36,7 +36,7 @@ module.exports = [{
     api.models.get('user')
       .findOne(decoded.id)
       .catch(error => { next(error) })
-      .then(user => {
+      .then(async (user) => {
         // TODO: validate if the user is active
 
         const { user: userToOutput } = await api.actions.call('auth.stripUser', { user });
