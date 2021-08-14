@@ -7,8 +7,8 @@ module.exports = [
     inputs: {
       id: {
         required: true,
-        description: "User identifier."
-      }
+        description: "User identifier.",
+      },
     },
 
     run(api, action, next) {
@@ -16,7 +16,7 @@ module.exports = [
       api.models
         .get("user")
         .findOne(action.params.id)
-        .then(user => {
+        .then((user) => {
           // check if the user exists
           if (!user) {
             return next(new Error(`The user not exists!`));
@@ -28,11 +28,11 @@ module.exports = [
           // update the user
           return api.actions.call("auth.updateUser", { user });
         })
-        .then(_ => {
+        .then((_) => {
           action.response.success = "The user was been disabled!";
           next();
         });
-    }
+    },
   },
   {
     name: "auth.activateUser",
@@ -41,8 +41,8 @@ module.exports = [
     inputs: {
       id: {
         required: true,
-        description: "user identifier."
-      }
+        description: "user identifier.",
+      },
     },
 
     async run(api, action) {
@@ -57,7 +57,7 @@ module.exports = [
       await api.actions.call("auth.updateUser", { user });
 
       action.response.success = "The user is now active!";
-    }
+    },
   },
   {
     name: "auth.updateUser",
@@ -66,42 +66,28 @@ module.exports = [
     inputs: {
       user: {
         required: true,
-        description: `User information`
-      }
+        description: `User information`,
+      },
     },
 
-    run(api, action) {
-      // get the user model
+    async run(api, action) {
       const UserModel = api.models.get("user");
 
-      // get user params
       let userParams = action.params.user;
 
-      // get the user to be edited
-      // TODO: improve the follow code, some operations can be optimized and more
-      // automatic
-      return UserModel.findOne(userParams.id)
-        .then(user => {
-          // if the user not exists throw an error
-          if (!user) {
-            throw new Error(`The user not exists!`);
-          }
+      const user = await UserModel.findOne(userParams.id);
+      if (!user) {
+        throw new Error(`The user not exists!`);
+      }
 
-          // if there is an password on the action input params that password must
-          // be hashed before the save
-          if (userParams.password && userParams.password !== user.password) {
-            // TODO: this must be placed on the model and we need to check if
-            // the confirmation field exists
-            userParams.password = api.hash.hashSync(userParams.password);
-          }
+      // if there is an password on the action input params that password must be hashed before the save
+      if (userParams.password && userParams.password !== user.password) {
+        // TODO: this must be placed on the model and we need to check if the confirmation field exists
+        userParams.password = api.hash.hashSync(userParams.password);
+      }
 
-          // update the user information
-          return UserModel.update(userParams.id, userParams);
-        })
-        .then(([user]) => {
-          // pass the updated user model to the action response
-          action.response.user = user;
-        });
-    }
-  }
+      // update the user information
+      action.response.user = await UserModel.update({ id: userParams.id }, userParams);
+    },
+  },
 ];
