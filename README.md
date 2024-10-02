@@ -5,16 +5,16 @@ Identify is an authentication solution for Stellar made to cur repetitive work i
 ## Composition
 
 - actions:
- - **`auth.register`** - create a new user account;
- - **`auth.login`** - login with an existent user account;
- - **`auth.disableUser`** - disable the user account. Disabled users can not make login;
- - **`auth.checkSession`** - check the state of a token and if it's valid return the expire time (`expireAt`) and the user info (`user`);
+- **`auth.register`** - create a new user account;
+- **`auth.login`** - login with an existent user account;
+- **`auth.disableUser`** - disable the user account. Disabled users can not make login;
+- **`auth.checkSession`** - check the state of a token and if it's valid return the expire time (`expireAt`) and the user info (`user`);
 - models:
- - **`user`** - model to represent a user on the database;
+- **`user`** - model to represent a user on the database;
 - events:
- - **`auth.checkSessionResponse`** - this event allows edit the response for the `auth.checkSession` action.
+- **`auth.checkSessionResponse`** - this event allows edit the response for the `auth.checkSession` action.
 - middleware:
- - **`auth.needAuth`** - only authenticated users can access the protected action.
+- **`auth.needAuth`** - only authenticated users can access the protected action.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ Now to activate the module you just need add `"identify"` to the `manifest.json`
   "name": "my-awesome-app",
   "version": "1.0.0",
 
-  "modules": [ "identify" ]
+  "modules": ["identify"]
 }
 ```
 
@@ -51,19 +51,19 @@ Now to activate the module you just need add `"identify"` to the `manifest.json`
 The code below show the usage of the middleware:
 
 ```javascript
-exports.example = {
-  name: 'example',
-  description: 'This is a protected action',
+export const example = {
+  name: "example",
+  description: "This is a protected action",
 
-  middleware: ['auth.needAuth'],
+  middleware: ["auth.needAuth"],
 
   run: (api, action, next) => {
     // only authenticated users reach this point
     // do something...
 
-    next()
-  }
-}
+    next();
+  },
+};
 ```
 
 > Note: it's recommended load this module before all the others.

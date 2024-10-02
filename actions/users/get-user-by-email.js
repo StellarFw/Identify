@@ -1,4 +1,4 @@
-exports.default = {
+export default {
   name: "identify.getUserByEmail",
   description: "Get the user record by email",
 
@@ -7,8 +7,8 @@ exports.default = {
       description: "Email for the user to be get",
       type: "string",
       required: true,
-      validator: "email"
-    }
+      validator: "email",
+    },
   },
 
   async run(api, { params, response }) {
@@ -19,6 +19,6 @@ exports.default = {
       throw api.config.auth.errors.userDoesNotExists;
     }
 
-    response.user = record
-  }
-}
+    response.user = record;
+  },
+};

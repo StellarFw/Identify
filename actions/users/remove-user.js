@@ -1,4 +1,4 @@
-exports.default = {
+export default {
   name: "auth.removeUser",
   description: "Remove the given user",
 
@@ -6,8 +6,8 @@ exports.default = {
     id: {
       required: true,
       type: "number",
-      description: "Id of the user to be removed"
-    }
+      description: "Id of the user to be removed",
+    },
   },
 
   async run(api, { params }) {
@@ -17,5 +17,5 @@ exports.default = {
 
     await api.events.fire("auth.beforeRemove", { id });
     await User.destroy(id);
-  }
+  },
 };

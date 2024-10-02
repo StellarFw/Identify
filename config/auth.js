@@ -1,8 +1,8 @@
-const getBaseUrl = api => api.config.auth.urls.baseUrl;
-const getEmailTitle = api => api.config.auth.emails.title;
+const getBaseUrl = (api) => api.config.auth.urls.baseUrl;
+const getEmailTitle = (api) => api.config.auth.emails.title;
 
-exports.default = {
-  auth: api => {
+export default {
+  auth: (api) => {
     return {
       // ---------------------------------------------------------------------
       // Secret token to generate the JWT token
@@ -41,7 +41,7 @@ exports.default = {
         // Activation link that is used on the activation email that is sent to
         // the user when a new account is created.
         // ---------------------------------------------------------------------
-        activationLink: api => token => `${getBaseUrl(api)}/auth/activation/${token}`
+        activationLink: (api) => (token) => `${getBaseUrl(api)}/auth/activation/${token}`,
       },
 
       resetToken: {
@@ -66,7 +66,6 @@ exports.default = {
         // ---------------------------------------------------------------------
         title: "Identify",
 
-
         // ---------------------------------------------------------------------
         // Title for the activation email
         // ---------------------------------------------------------------------
@@ -78,9 +77,11 @@ exports.default = {
         // This function receives an object with the following props:
         // - activationLink: link with the URL for the activation
         // ---------------------------------------------------------------------
-        activation: api => opts => `
+        activation: (api) => (opts) => `
           <h1>${getEmailTitle(api)}</h1>
-          Click on the following link to activate your account <a href="${opts.activationLink}">${opts.activationLink}</a>.
+          Click on the following link to activate your account <a href="${opts.activationLink}">${
+            opts.activationLink
+          }</a>.
         `,
       },
 
@@ -94,7 +95,7 @@ exports.default = {
         tokenNotProvided: () => {
           return {
             code: "token_not_provided",
-            message: "Token not provided"
+            message: "Token not provided",
           };
         },
 
@@ -104,7 +105,7 @@ exports.default = {
         malformedToken: () => {
           return {
             code: "malformed_token",
-            message: "The token is invalid"
+            message: "The token is invalid",
           };
         },
 
@@ -114,7 +115,7 @@ exports.default = {
         expiredToken: () => {
           return {
             code: "expired_token",
-            message: "The token was expired"
+            message: "The token was expired",
           };
         },
 
@@ -124,7 +125,7 @@ exports.default = {
         invalidCredentials: () => {
           return {
             code: "invalid_credentials",
-            message: "Invalid credentials"
+            message: "Invalid credentials",
           };
         },
 
@@ -134,7 +135,7 @@ exports.default = {
         userIsDisabled: () => {
           return {
             code: "user_id_disabled",
-            message: "The user are disable"
+            message: "The user are disable",
           };
         },
 
@@ -143,9 +144,9 @@ exports.default = {
         // ---------------------------------------------------------------------
         userDoesNotExists: {
           code: "user_does_not_exists",
-          message: "The user doesn't exists"
-        }
-      }
+          message: "The user doesn't exists",
+        },
+      },
     };
-  }
+  },
 };

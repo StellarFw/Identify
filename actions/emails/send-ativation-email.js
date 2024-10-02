@@ -1,7 +1,7 @@
-exports.default = {
+export default {
   name: "identify.sendActivationEmail",
   description: "Send the activation email for the given user",
-  
+
   private: true,
 
   inputs: {
@@ -9,9 +9,8 @@ exports.default = {
       description: "Email of the user that must be activated",
       type: "string",
       required: true,
-    }
+    },
   },
-
 
   async run(api, { params }) {
     const { user } = await api.actions.call("identify.getUserByEmail", params);
@@ -26,7 +25,7 @@ exports.default = {
       to: user.email,
       body,
       subject,
-      format: "html"
+      format: "html",
     });
-  }
-}
+  },
+};

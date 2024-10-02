@@ -1,22 +1,22 @@
-const R = require("ramda");
+import * as R from "ramda";
 
-exports.default = {
-  name: 'auth.getUsers',
-  description: 'Get all registered users',
+export default {
+  name: "auth.getUsers",
+  description: "Get all registered users",
 
   inputs: {
     active: {
       description: "When set will be used to filter the users by state",
       type: "boolean",
-      format: val => typeof val === "boolean" ? val : true,
-    }
+      format: (val) => (typeof val === "boolean" ? val : true),
+    },
   },
 
-  async run (api, action) {
+  async run(api, action) {
     // get the User model
-    const User = api.models.get('user')
+    const User = api.models.get("user");
 
-    const query = {}
+    const query = {};
 
     if (action.params.active !== null) {
       query.active = action.params.active;
@@ -27,18 +27,18 @@ exports.default = {
 
     // perform a event on the search object in order to allow other modules
     // extend it
-    search = (await api.events.fire('identify.beforeSearchUsers', { search })).search
+    search = (await api.events.fire("identify.beforeSearchUsers", { search })).search;
 
     let users = await search;
 
     // remove protected fields
     const removePassword = R.dissoc("password");
-    users = users.map(user => removePassword(user));
+    users = users.map((user) => removePassword(user));
 
     // perform a event after the search
-    users = (await api.events.fire('identify.afterSearchUsers', { users })).users
+    users = (await api.events.fire("identify.afterSearchUsers", { users })).users;
 
     // put the users available on the response
-    action.response.users = users
-  }
-}
+    action.response.users = users;
+  },
+};
