@@ -1,27 +1,27 @@
-'use strict'
+"use strict";
 
-exports.default = api => {
+export default (api) => {
   // create a model for the user
   const userSchema = {
     attributes: {
-      name: { type: 'string', defaultsTo: '' },
+      name: { type: "string", defaultsTo: "" },
       email: {
-        type : 'string' ,
-        required : true,
+        type: "string",
+        required: true,
         autoMigrations: {
-          unique : true,
-        }
+          unique: true,
+        },
       },
-      password: { type: 'string', required: true},
-      resetToken: { type: 'string' },
+      password: { type: "string", required: true },
+      resetToken: { type: "string" },
       // TODO: add date validator
       resetTokenExpire: {
-        type: 'string'
+        type: "string",
       },
-      active: { type: 'boolean' },
-    }
-  }
+      active: { type: "boolean" },
+    },
+  };
 
   // return the model
-  return userSchema
-}
+  return userSchema;
+};

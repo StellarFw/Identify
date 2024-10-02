@@ -1,6 +1,6 @@
-const addMinutes = require('date-fns/addMinutes');
+import { addMinutes } from "date-fns";
 
-exports.default = {
+export const identifySetResetToken = {
   name: "identify.setResetToken",
   description: "Set a reset token for the given user",
   private: true,
@@ -10,8 +10,8 @@ exports.default = {
       description: "User which the reset token must be set",
       type: "string",
       required: true,
-      validator: "email"
-    }
+      validator: "email",
+    },
   },
 
   async run(api, { params }) {
@@ -33,4 +33,4 @@ exports.default = {
       },
     });
   },
-}
+};

@@ -1,23 +1,25 @@
-const jwt = require('jsonwebtoken')
+import jwt from "jsonwebtoken";
 
-exports.needAuth = {
-  name: 'auth.needAuth',
-  description: 'The user needs authentication to access the action',
+export const AuthNeedAuth = {
+  name: "auth.needAuth",
+  description: "The user needs authentication to access the action",
 
   preProcessor: (action, next) => {
     // ignore when the call is made internally
-    if (action.connection.type === 'internal') { return next() }
+    if (action.connection.type === "internal") {
+      return next();
+    }
 
     // get the API reference
-    let api = action.api
+    let api = action.api;
 
     // check action params for token
-    let token = action.params.token
+    let token = action.params.token;
 
     // if the token was not found on the action params and
     // the connection is HTTP check the headers
-    if (token === undefined && action.connection.type === 'web') {
-      token = action.connection.rawConnection.req.headers[ 'x-access-token' ]
+    if (token === undefined && action.connection.type === "web") {
+      token = action.connection.rawConnection.req.headers["x-access-token"];
     }
 
     // decode token
@@ -29,15 +31,15 @@ exports.needAuth = {
         }
 
         // if everything is good, save was an action property to be used later
-        action.authDecodedToken = decoded
+        action.authDecodedToken = decoded;
 
         // execute the callback function
-        return next()
-      })
+        return next();
+      });
 
-      return
+      return;
     }
 
-    return next(api.config.auth.errors.tokenNotProvided())
-  }
-}
+    return next(api.config.auth.errors.tokenNotProvided());
+  },
+};

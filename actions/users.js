@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     name: "auth.disableUser",
     description: `This disable an user account. The user will not be able to
