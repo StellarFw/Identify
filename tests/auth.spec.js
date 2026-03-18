@@ -241,6 +241,78 @@ describe("Authentication", () => {
     });
   });
 
+  describe("auth.updateUser", () => {
+    const updateableUser = {
+      email: "updateable@example.com",
+      password: "original_password",
+      name: "Original Name",
+    };
+    let updateableUserId = "";
+
+    beforeEach(async () => {
+      const user = await api.models.get("user").create(updateableUser);
+      updateableUserId = user.id;
+    });
+
+    afterEach(async () => {
+      await api.models.get("user").destroy({ id: updateableUserId });
+    });
+
+    it("rejects when user does not exist", async () => {
+      await api.actions
+        .call("auth.updateUser", { user: { id: "nonexistent" } })
+        .should.be.rejected();
+    });
+
+    it("updates user fields without changing the password when password is omitted", async () => {
+      await api.actions.call("auth.updateUser", {
+        user: { id: updateableUserId, name: "Updated Name" },
+      });
+
+      const response = await api.actions.call("auth.login", {
+        email: updateableUser.email,
+        password: updateableUser.password,
+      });
+
+      Should.exist(response.token);
+    });
+
+    it("preserves existing password hash when password is an empty string", async () => {
+      await api.actions.call("auth.updateUser", {
+        user: { id: updateableUserId, name: "Updated Name", password: "" },
+      });
+
+      const response = await api.actions.call("auth.login", {
+        email: updateableUser.email,
+        password: updateableUser.password,
+      });
+
+      Should.exist(response.token);
+    });
+
+    it("hashes and updates the password when a new non-empty password is provided", async () => {
+      const newPassword = "new_password_123";
+
+      await api.actions.call("auth.updateUser", {
+        user: { id: updateableUserId, password: newPassword },
+      });
+
+      const response = await api.actions.call("auth.login", {
+        email: updateableUser.email,
+        password: newPassword,
+      });
+
+      Should.exist(response.token);
+
+      await api.actions
+        .call("auth.login", {
+          email: updateableUser.email,
+          password: updateableUser.password,
+        })
+        .should.be.rejectedWith({ code: "invalid_credentials" });
+    });
+  });
+
   it("can disable an user account", done => {
     api.actions
       .call("auth.disableUser", { id: activeUserId })
