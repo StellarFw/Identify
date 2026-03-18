@@ -80,8 +80,11 @@ export default [
         throw new Error(`The user not exists!`);
       }
 
-      // if there is an password on the action input params that password must be hashed before the save
-      if (userParams.password && userParams.password !== user.password) {
+      // if there is a password on the action input params that password must be hashed before the save
+      // if password is absent or blank, remove the field entirely to preserve the existing hash
+      if (!userParams.password) {
+        delete userParams.password;
+      } else if (userParams.password !== user.password) {
         // TODO: this must be placed on the model and we need to check if the confirmation field exists
         userParams.password = api.hash.hashSync(userParams.password);
       }
